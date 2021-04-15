@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="Target"><value>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</value></data>
+  <data name="DefaultSchema"><value>dbo</value></data>
+  </root>

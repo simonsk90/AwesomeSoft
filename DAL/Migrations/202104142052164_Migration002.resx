@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="Target"><value>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</value></data>
+  <data name="DefaultSchema"><value>dbo</value></data>
+  </root>
