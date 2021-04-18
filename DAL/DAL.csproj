@@ -6,7 +6,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{D73A012C-DEA0-458C-AC3F-5E110640878D}</ProjectGuid>
-        <OutputType>Exe</OutputType>
+        <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>DAL</RootNamespace>
         <AssemblyName>DAL</AssemblyName>
@@ -49,6 +49,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AwesomeContext.cs" />
+        <Compile Include="EntityExtensions.cs" />
         <Compile Include="EntityModels\Location.cs" />
         <Compile Include="EntityModels\Meeting.cs" />
         <Compile Include="EntityModels\Participant.cs" />
@@ -65,8 +66,10 @@
           <DependentUpon>202104142057358_Migration003.cs</DependentUpon>
         </Compile>
         <Compile Include="Migrations\Configuration.cs" />
-        <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Read\MeetingRead.cs" />
+        <Compile Include="Write\LocationWrite.cs" />
+        <Compile Include="Write\ParticipantWrite.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />
