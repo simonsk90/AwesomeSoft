@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -11,24 +12,59 @@ namespace API.Controllers
     [RoutePrefix("api")]
     public class LocationController : ApiController
     {
-        private readonly LocationService _locationService = new LocationService();
-        
-        public LocationController()
+
+        [Route("Location/{locationId}")]
+        [HttpGet]
+        public async Task<LocationDto> GetLocation(int locationId)
         {
+            try
+            {
+                LocationDto result = await LocationService.GetLocation(locationId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         [Route("Location")]
         [HttpPost]
-        public async Task CreateLocation([FromBody] LocationDto location)
+        public async Task<HttpResponseMessage> CreateLocation([FromBody] LocationDto location)
         {
-            await _locationService.CreateLocation(location);
+            HttpResponseMessage result;
+            try
+            {
+                await LocationService.CreateLocation(location);
+                result = Request.CreateResponse(HttpStatusCode.Created);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+
+            return result;
         }
         
         [Route("Location")]
         [HttpPut]
-        public async Task UpdateLocation([FromBody] LocationDto location)
+        public async Task<HttpResponseMessage> UpdateLocation([FromBody] LocationDto location)
         {
-            await _locationService.UpdateLocation(location);
+            HttpResponseMessage result;
+            try
+            {
+                await LocationService.UpdateLocation(location);
+                result = Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+
+            return result;
         }
         
     }

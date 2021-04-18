@@ -1,28 +1,34 @@
 using System.Threading.Tasks;
 using DAL.EntityModels;
+using DAL.Read;
 using DAL.Write;
 using DTO;
 
 namespace BusinessLogic
 {
-    public class LocationService
+    public static class LocationService
     {
 
-        public async Task CreateLocation(LocationDto location)
+        public static async Task<LocationDto> GetLocation(int locationId)
         {
-            Location locationEntity = Convert(location);
-            LocationWrite locationWrite = new LocationWrite();
-            await locationWrite.CreateLocation(locationEntity);
+            Location locationEntity = await LocationRead.GetLocation(locationId);
+            LocationDto result = Convert(locationEntity);
+            return result;
         }
         
-        public async Task UpdateLocation(LocationDto location)
+        public static async Task CreateLocation(LocationDto location)
         {
             Location locationEntity = Convert(location);
-            LocationWrite locationWrite = new LocationWrite();
-            await locationWrite.UpdateLocation(locationEntity);
+            await LocationWrite.CreateLocation(locationEntity);
         }
         
-        public LocationDto Convert(Location entity)
+        public static async Task UpdateLocation(LocationDto location)
+        {
+            Location locationEntity = Convert(location);
+            await LocationWrite.UpdateLocation(locationEntity);
+        }
+        
+        public static LocationDto Convert(Location entity)
         {
             LocationDto result = new LocationDto()
             {
@@ -32,7 +38,7 @@ namespace BusinessLogic
             return result;
         }
         
-        public Location Convert(LocationDto locationDto)
+        public static Location Convert(LocationDto locationDto)
         {
             Location result = new Location()
             {

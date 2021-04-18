@@ -1,26 +1,39 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DAL.EntityModels;
+using DAL.Read;
 using DAL.Write;
 using DTO;
 
 namespace BusinessLogic
 {
-    public class ParticipantService
+    public static class ParticipantService
     {
-        public async Task CreateParticipant(ParticipantDto participant)
+        public static async Task<ParticipantDto> GetParticipant(int participantId)
+        {
+            Participant entity = await ParticipantRead.GetParticipant(participantId, a => a.EnrolledMeetings);
+            ParticipantDto result = Convert(entity);
+            return result;
+        }
+        public static async Task CreateParticipant(ParticipantDto participant)
         {
             Participant participantEntity = Convert(participant);
-            ParticipantWrite participantWrite = new ParticipantWrite();
-            await participantWrite.CreateParticipant(participantEntity);
+            await ParticipantWrite.CreateParticipant(participantEntity);
         }
-        public async Task UpdateParticipant(ParticipantDto participant)
+        public static async Task UpdateParticipant(ParticipantDto participant)
         {
             Participant participantEntity = Convert(participant);
-            ParticipantWrite participantWrite = new ParticipantWrite();
-            await participantWrite.UpdateParticipant(participantEntity);
+            await ParticipantWrite.UpdateParticipant(participantEntity);
         }
-        
-        public ParticipantDto Convert(Participant entity)
+        public static async Task<List<MeetingDto>> GetMeetingsForParticipant(int participantId)
+        {
+            List<MeetingDto> result = (await ParticipantRead.GetMeetingsForParticipant(participantId))
+                .Select(ent => MeetingService.Convert(ent))
+                .ToList();
+            return result;
+        }
+        public static ParticipantDto Convert(Participant entity)
         {
             ParticipantDto result = new ParticipantDto()
             {
@@ -31,8 +44,7 @@ namespace BusinessLogic
             };
             return result;
         }
-        
-        public Participant Convert(ParticipantDto participantDto)
+        public static Participant Convert(ParticipantDto participantDto)
         {
             Participant result = new Participant()
             {

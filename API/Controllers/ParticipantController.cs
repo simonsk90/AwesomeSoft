@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,30 +13,72 @@ namespace API.Controllers
     [RoutePrefix("api")]
     public class ParticipantController : ApiController
     {
-        
-        private readonly ParticipantService _participantService = new ParticipantService();
-        
-        [Route("Participant")]
+
+        [Route("Participant/{participantId}")]
         [HttpGet]
-        public async Task<HttpResponseMessage> GetParticipant()
+        public async Task<ParticipantDto> GetParticipant(int participantId)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            try
+            {
+                ParticipantDto result = await ParticipantService.GetParticipant(participantId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         [Route("Participant")]
         [HttpPost]
         public async Task<HttpResponseMessage> CreateParticipant([FromBody] ParticipantDto participant)
         {
-            await _participantService.CreateParticipant(participant);
-            return new HttpResponseMessage(HttpStatusCode.Created);
+            HttpResponseMessage result;
+            try
+            {
+                await ParticipantService.CreateParticipant(participant);
+                result = Request.CreateResponse(HttpStatusCode.Created);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+            return result;
         }
         
         [Route("Participant")]
         [HttpPut]
-        public async Task<HttpResponseMessage> UpdateLocation([FromBody] ParticipantDto participant)
+        public async Task<HttpResponseMessage> UpdateParticipant([FromBody] ParticipantDto participant)
         {
-            await _participantService.UpdateParticipant(participant);
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            HttpResponseMessage result;
+            try
+            {
+                await ParticipantService.UpdateParticipant(participant);
+                result = Request.CreateResponse(HttpStatusCode.Created);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+            return result;
+        }
+
+        [Route("ParticipantMeetings/{participantId}")]
+        [HttpGet]
+        public async Task<List<MeetingDto>> GetMeetingsForParticipant(int participantId)
+        {
+            try
+            {
+                return await ParticipantService.GetMeetingsForParticipant(participantId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

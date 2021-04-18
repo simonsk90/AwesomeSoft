@@ -1,12 +1,13 @@
+using System.Data.Entity;
 using System.Threading.Tasks;
 using DAL.EntityModels;
 
 namespace DAL.Write
 {
-    public class LocationWrite
+    public static class LocationWrite
     {
 
-        public async Task CreateLocation(Location location)
+        public static async Task CreateLocation(Location location)
         {
             using (AwesomeContext context = new AwesomeContext())
             {
@@ -15,12 +16,17 @@ namespace DAL.Write
             }
         }
         
-        public async Task UpdateLocation(Location newLocation)
+        /// <summary>
+        /// Update by overwriting everything
+        /// </summary>
+        /// <param name="newLocation"></param>
+        /// <returns></returns>
+        public static async Task UpdateLocation(Location newLocation)
         {
             using (AwesomeContext context = new AwesomeContext())
             {
-                Location existingEntity = context.Locations.Find(newLocation.Id);
-                context.Entry(existingEntity).CurrentValues.SetValues(newLocation);
+                context.Locations.Attach(newLocation);
+                context.Entry(newLocation).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
         }
