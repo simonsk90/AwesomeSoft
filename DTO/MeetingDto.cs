@@ -14,9 +14,6 @@ namespace DTO
         public int OrganizerRefId { get; set; }
         public int LocationRefId { get; set; }
         
-        // public ParticipantDto Organizer { get; set; }
-        // public LocationDto Location { get; set; }
-        // public List<ParticipantDto> Participants { get; set; }
 
     }
 }

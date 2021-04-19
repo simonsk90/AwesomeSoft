@@ -45,11 +45,12 @@ namespace API.Controllers
         
         [Route("MeetingComplications")]
         [HttpGet]
-        public async Task GetMeetingComplications()
+        public async Task<string> GetMeetingComplications()
         {
             try
             {
-                await MeetingService.GetComplications();
+                string result = await MeetingService.GetConflicts();
+                return result;
             }
             catch (Exception e)
             {

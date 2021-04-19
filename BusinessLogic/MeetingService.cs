@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Odbc;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DAL;
 using DAL.EntityModels;
@@ -54,20 +56,31 @@ namespace BusinessLogic
             await MeetingWrite.AddParticipantToMeeting(participantTask.Result, meetingTask.Result);
         }
 
-        public static async Task GetComplications()
+        /// <summary>
+        /// Find conflicts in future meetings.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> GetConflicts()
         {
             List<Meeting> futureMeetings = await MeetingRead.GetFutureMeetings();
 
-            // List<List<Meeting>> 
+            StringBuilder sb = new StringBuilder();
 
-            foreach (Meeting a in futureMeetings)
+            List<ParticipantMeetingConflicts> participantMeetingConflicts = new List<ParticipantMeetingConflicts>();
+            
+            List<LocationMeetingConflicts> locationMeetingConflicts = new List<LocationMeetingConflicts>();
+            
+            foreach (Meeting meetingA in futureMeetings)
             {
+                //Find the meetings that overlap
                 List<Meeting> overlappingMeetings = futureMeetings
-                    .Where(b => a.MeetingStart < b.MeetingEnd && b.MeetingStart < a.MeetingEnd)
+                    .Where(meetingB => meetingA.MeetingStart < meetingB.MeetingEnd && meetingB.MeetingStart < meetingA.MeetingEnd)
                     .ToList();
                 
-                //Check if any participant is enrolled in more than one of these overlapping meetings
-                var participantComplications = overlappingMeetings
+                #region participant meeting conflict section
+
+                //Find participants who are enrolled in more than one of these overlapping meetings
+                List<int> participantConflicts = overlappingMeetings
                     .SelectMany(p => p.Participants)
                     .Select(p => p.Id)
                     .GroupBy(p => p)
@@ -75,11 +88,73 @@ namespace BusinessLogic
                     .Select(g => g.Key)
                     .ToList();
 
+                foreach (int participantId in participantConflicts)
+                {
+                    if (!meetingA.Participants.Select(a => a.Id).Contains(participantId))
+                    {
+                        continue;
+                    }
+                    ParticipantMeetingConflicts pmc = new ParticipantMeetingConflicts(participantId, meetingA.Id);
+                    foreach (Meeting overlappingMeeting in overlappingMeetings)
+                    {
+                        if (overlappingMeeting.Participants.Select(p => p.Id).Contains(participantId) && overlappingMeeting.Id != pmc.TargetMeetingId)
+                        {
+                            //Participant is enrolled for two meetings at the same time, which is not possible
+                            pmc.OverlappingMeetings.Add(overlappingMeeting.Id);
+                        }
+                    }
+                    participantMeetingConflicts.Add(pmc);
+                }
+                
+                #endregion
+
+                #region Location complication section
+
+                //Find locations that are used in more than one of these overlapping meetings
+                List<int> locationConflicts = overlappingMeetings
+                    .Select(m => m.LocationRefId)
+                    .GroupBy(l => l)
+                    .Where(l => l.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                foreach (int locationId in locationConflicts)
+                {
+                    if (meetingA.LocationRefId != locationId)
+                    {
+                        continue;
+                    }
+                    LocationMeetingConflicts lmc = new LocationMeetingConflicts(locationId, meetingA.Id);
+                    foreach (Meeting overlappingMeeting in overlappingMeetings)
+                    {
+                        if (overlappingMeeting.LocationRefId == locationId && overlappingMeeting.Id != lmc.TargetMeetingId)
+                        {
+                            //Location is used for two meetings at the same time, which is not possible
+                            lmc.OverlappingMeetings.Add(overlappingMeeting.Id);
+                        }
+                    }
+                    locationMeetingConflicts.Add(lmc);
+                }
+
+                #endregion
             }
+                
+            foreach (var pmc in participantMeetingConflicts.OrderBy(p => p.ParticipantId))
+            {
+                sb.Append($"Participant '{pmc.ParticipantId}' is enrolled at meeting '{pmc.TargetMeetingId}', but it is conflicting with the participant's other meetings: [{string.Join(", ", pmc.OverlappingMeetings)}] <br /> ");
+            }
+
+            sb.Append("<br />");
             
-            
+            foreach (var lmc in locationMeetingConflicts.OrderBy(l => l.LocationId))
+            {
+                sb.Append($"Location '{lmc.LocationId}' is assigned for meeting '{lmc.TargetMeetingId}', but it is conflicting with the location's other meetings: [{string.Join(", ", lmc.OverlappingMeetings)}] <br />");
+            }
+
+            return sb.ToString();
         }
-        
+
+
         /// <summary>
         /// Convert from Entity to DTO
         /// </summary>
